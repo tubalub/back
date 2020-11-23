@@ -1,8 +1,7 @@
-package services;
+package tubalubback.services;
 
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
-import software.amazon.awssdk.core.Response;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -15,7 +14,7 @@ public class S3Service {
     public static final Region S3_REGION = Region.US_EAST_1;
     public static final String BUCKET_PATH = "/";
 
-    private static S3Client s3 = S3Client.builder().region(S3_REGION).credentialsProvider(EnvironmentVariableCredentialsProvider.create()).build();
+    private static final S3Client s3 = S3Client.builder().region(S3_REGION).credentialsProvider(ProfileCredentialsProvider.create()).build();
 
     public String putObject(String objKey, byte[] file) {
         try {
