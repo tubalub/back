@@ -32,20 +32,20 @@ import tubalubback.TubalubBackApplication;
 @RequestMapping("/music")
 public class MusicController {
 	public static DataInputStream dataStream;
-	public static int pos = -1;
+	public static int pos = 0;
 	public static List<String> files = new ArrayList<>();
 	public static List<ServletOutputStream> streams = new ArrayList<>();
 	
 	public void startStreaming() throws IOException {
 		System.out.println("starting stream");
 		if(files.isEmpty()) {
-			files.add("D:\\Home\\Music\\2AM\\1집 Saint o'clock\\13 이 노래.mp3");
 			files.add("D:\\Home\\Music\\Taylor Swift\\Love Story\\00 Love Story.mp3");
+			files.add("D:\\Home\\Music\\2AM\\1집 Saint o'clock\\13 이 노래.mp3");
 			files.add("D:\\Home\\Music\\Tablo\\열꽃_ Part 1\\02 나쁘다(feat_ 진실).mp3");
 		}
-		if (++pos >= files.size()) {
-			pos=0;
-		}
+//		if (++pos >= files.size()) {
+//			pos=0;
+//		}
 		dataStream = new DataInputStream(new FileInputStream(files.get(pos)));
 	}
 	
