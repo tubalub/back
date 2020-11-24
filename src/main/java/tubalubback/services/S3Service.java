@@ -6,6 +6,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+
+import java.time.Duration;
 
 @Service
 public class S3Service {
@@ -15,6 +20,7 @@ public class S3Service {
     public static final String BUCKET_PATH = "/";
 
     private static final S3Client s3 = S3Client.builder().region(S3_REGION).credentialsProvider(ProfileCredentialsProvider.create()).build();
+    private static final S3Presigner presigner = S3Presigner.builder().region(S3_REGION).credentialsProvider(ProfileCredentialsProvider.create()).build();
 
     public String putObject(String objKey, byte[] file) {
         try {
@@ -39,6 +45,13 @@ public class S3Service {
             return false;
         }
         return false;
+    }
+
+    public String presignPutUrl(String filename) {
+        long expTime = System.currentTimeMillis() + 6000;
+        PresignedPutObjectRequest putReq = presigner.presignPutObject(r -> r.signatureDuration(Duration.ofMinutes(2))
+                .putObjectRequest(por -> por.bucket(BUCKET_NAME).key(filename)));
+        return putReq.url().toString();
     }
 
 
