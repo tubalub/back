@@ -51,7 +51,6 @@ class MusicControllerTest {
         }).get(1, TimeUnit.SECONDS);
 
         MusicSyncInfo body = new MusicSyncInfo();
-        body.setIndex(10);
         String jsonBody = om.writeValueAsString(body);
 
         session.subscribe("/topic/music", new DefaultStompFrameHandler());

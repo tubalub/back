@@ -48,7 +48,6 @@ public class S3Service {
     }
 
     public String presignPutUrl(String filename) {
-        long expTime = System.currentTimeMillis() + 6000;
         PresignedPutObjectRequest putReq = presigner.presignPutObject(r -> r.signatureDuration(Duration.ofMinutes(2))
                 .putObjectRequest(por -> por.bucket(BUCKET_NAME).key(filename)));
         return putReq.url().toString();
