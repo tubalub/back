@@ -12,17 +12,19 @@ import tubalubback.models.MusicSyncInfo;
 public class SyncService {
     int users = 0;
 
-    public MusicSyncInfo syncUpdate = new MusicSyncInfo();
+    public static MusicSyncInfo syncUpdate = new MusicSyncInfo();
     private final RestTemplate restTemplate = new RestTemplate();
 
     @EventListener(SessionConnectEvent.class)
     public void webSocketConnected(SessionConnectEvent event) {
         users++;
+        System.out.println("New user connected. Currently " + users + " users");
     }
 
     @EventListener(SessionDisconnectEvent.class)
     public void webSocketDisconnected(SessionDisconnectEvent event) {
         users--;
+        System.out.println("User disconnected. Currently " + users + " users");
 
         if (users < 1) {
             for (String url : syncUpdate.getSongQ()) {
@@ -40,7 +42,7 @@ public class SyncService {
         }
 
         //reset when all users have disconnected
-        this.syncUpdate = new MusicSyncInfo();
+        syncUpdate = new MusicSyncInfo();
     }
 
 }
