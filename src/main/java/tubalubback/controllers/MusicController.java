@@ -14,8 +14,6 @@ public class MusicController {
     @MessageMapping("/update")
     @SendTo("/topic/music")
     public MusicSyncInfo playPause(MusicSyncInfo input) {
-        System.out.println(input.getIndex());
-        System.out.println(input.getLink());
         System.out.println(input.getTime());
         return input;
     }
