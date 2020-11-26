@@ -35,11 +35,15 @@ public class MusicController {
             System.out.println(s);
         }
         SyncService.syncUpdate = input;
+        SyncService.currentSongStartTime = System.currentTimeMillis();
         return input;
     }
 
     @GetMapping("/sync")
     public ResponseEntity<MusicSyncInfo> getSync() {
+        int secondsSinceStart = (SyncService.currentSongStartTime < 0) ?
+                0 : (int) (System.currentTimeMillis() - SyncService.currentSongStartTime) / 1000;
+        SyncService.syncUpdate.setTime(secondsSinceStart);
         return ResponseEntity.ok(SyncService.syncUpdate);
     }
 
