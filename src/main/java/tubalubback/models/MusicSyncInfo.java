@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class MusicSyncInfo {
-    private long time = 0;
+    private int time = 0;
     private List<String> songQ = new ArrayList<>();
     private List<String> history = new ArrayList<>();
 }
