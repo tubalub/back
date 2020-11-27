@@ -1,5 +1,6 @@
 package tubalubback.services;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import java.time.Duration;
 
 @Service
+@Log4j2
 public class S3Service {
 
     public static final String BUCKET_NAME = "tubalub";
@@ -49,7 +51,8 @@ public class S3Service {
 
     public String presignPutUrl(String filename) {
         PresignedPutObjectRequest putReq = presigner.presignPutObject(r -> r.signatureDuration(Duration.ofMinutes(2))
-                .putObjectRequest(por -> por.bucket(BUCKET_NAME).key(filename)));
+                .putObjectRequest(por -> por.bucket(BUCKET_NAME).key("uploads/"+filename)));
+        log.info("Presigned URL generated: {}", putReq.url().toString());
         return putReq.url().toString();
     }
 
