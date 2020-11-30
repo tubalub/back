@@ -11,7 +11,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 public class TubalubBackApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(TubalubBackApplication.class, args);
 	}
 
