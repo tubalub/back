@@ -9,8 +9,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import tubalubback.models.MusicSyncInfo;
 import tubalubback.utils.SyncUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -23,7 +22,7 @@ public class SyncService {
     private static MusicSyncInfo syncUpdate = new MusicSyncInfo();
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public static List<String> userList = new ArrayList<>();
+    public static Set<String> userSet = Collections.synchronizedSet(new HashSet<>());
 
     @EventListener(SessionConnectEvent.class)
     public void webSocketConnected(SessionConnectEvent event) {
