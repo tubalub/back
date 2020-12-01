@@ -33,6 +33,9 @@ public class SyncService {
     @Autowired
     private SimpMessagingTemplate simp;
 
+    @Autowired
+    private S3Service s3Service;
+
     @EventListener(SessionConnectEvent.class)
     public void webSocketConnected(SessionConnectEvent event) {
         Message<byte[]> msg = event.getMessage();
@@ -82,21 +85,27 @@ public class SyncService {
             if (usernames.size() < 1) {
                 for (String url : syncUpdate.getSongQ()) {
                     if (url.contains("s3.amazonaws")) {
-                        log.info("Deleting: {}", url);
                         try {
-                            restTemplate.delete(url);
+                            if (s3Service.deleteFromURL(url)) {
+                                log.info("Deleted: {}", url);
+                            } else {
+                                log.error("Error deleting: {}", url);
+                            }
                         } catch (NullPointerException e) {
-                            log.info("Null element in songQ");
+                            log.error("Null element in songQ");
                         }
                     }
                 }
                 for (String url : syncUpdate.getHistory()) {
                     if (url.contains("s3.amazonaws")) {
-                        log.info("Deleting: {}", url);
                         try {
-                            restTemplate.delete(url);
+                            if (s3Service.deleteFromURL(url)) {
+                                log.info("Deleted: {}", url);
+                            } else {
+                                log.error("Error deleting: {}", url);
+                            }
                         } catch (NullPointerException e) {
-                            log.info("Null element in history");
+                            log.error("Null element in history");
                         }
                     }
                 }
