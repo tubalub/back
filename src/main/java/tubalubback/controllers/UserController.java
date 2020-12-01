@@ -7,12 +7,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import tubalubback.services.SyncService;
 import tubalubback.utils.SyncUtils;
 
 import java.util.Collection;
-import java.util.Set;
 
 @Controller
 @CrossOrigin

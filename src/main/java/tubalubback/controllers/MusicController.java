@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import tubalubback.models.MusicSyncInfo;
 import tubalubback.services.SyncService;
 
-import java.util.Set;
-
 @Controller
 @CrossOrigin
 @Log4j2
