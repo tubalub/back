@@ -7,7 +7,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import tubalubback.models.MusicSyncInfo;
@@ -25,7 +24,6 @@ public class SyncService {
     // music sync
     public static long currentSongStartTime = -1;
     private static MusicSyncInfo syncUpdate = new MusicSyncInfo();
-    private final RestTemplate restTemplate = new RestTemplate();
 
     // sessionID key, username values
     public final static Map<String, String> usernames = new HashMap<>();
@@ -50,7 +48,6 @@ public class SyncService {
 
     @EventListener(SessionDisconnectEvent.class)
     public void webSocketDisconnected(SessionDisconnectEvent event) {
-        Message<byte[]> msg = event.getMessage();
         String sessionID = event.getSessionId();
         String username = usernames.get(sessionID);
         usernames.remove(sessionID);
@@ -81,32 +78,33 @@ public class SyncService {
 
     private void clearSongLists() {
         log.info("Empty lobby. Clearing song lists...");
-        synchronized(SyncUtils.SYNC_STRING) {
+        synchronized (SyncUtils.SYNC_STRING) {
             if (usernames.size() < 1) {
                 for (String url : syncUpdate.getSongQ()) {
-                    if (url.contains("s3.amazonaws")) {
-                        try {
+                    try {
+                        if (url.contains("s3.amazonaws")) {
                             if (s3Service.deleteFromURL(url)) {
                                 log.info("Deleted: {}", url);
                             } else {
                                 log.error("Error deleting: {}", url);
                             }
-                        } catch (NullPointerException e) {
-                            log.error("Null element in songQ");
                         }
+                    } catch (NullPointerException e) {
+                        log.error("Null element in songQ");
                     }
                 }
                 for (String url : syncUpdate.getHistory()) {
-                    if (url.contains("s3.amazonaws")) {
-                        try {
+                    try {
+                        if (url.contains("s3.amazonaws")) {
+
                             if (s3Service.deleteFromURL(url)) {
                                 log.info("Deleted: {}", url);
                             } else {
                                 log.error("Error deleting: {}", url);
                             }
-                        } catch (NullPointerException e) {
-                            log.error("Null element in history");
                         }
+                    } catch (NullPointerException e) {
+                        log.error("Null element in songQ");
                     }
                 }
 
@@ -118,20 +116,20 @@ public class SyncService {
     }
 
     public static MusicSyncInfo setSyncUpdate(MusicSyncInfo input) {
-        synchronized(SyncUtils.SYNC_STRING) {
+        synchronized (SyncUtils.SYNC_STRING) {
             syncUpdate = input;
             return syncUpdate;
         }
     }
 
     public static MusicSyncInfo getSyncUpdate() {
-        synchronized(SyncUtils.SYNC_STRING) {
+        synchronized (SyncUtils.SYNC_STRING) {
             return syncUpdate;
         }
     }
 
     public static MusicSyncInfo setElapsedTime(int time) {
-        synchronized(SyncUtils.SYNC_STRING) {
+        synchronized (SyncUtils.SYNC_STRING) {
             syncUpdate.setTime(time);
             return syncUpdate;
         }
