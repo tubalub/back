@@ -22,7 +22,7 @@ public class MusicController {
         for (String s : input.getSongQ()) {
             log.info(s);
         }
-        System.out.println("History:");
+        log.info("History:");
         for (String s : input.getHistory()) {
             log.info(s);
         }
